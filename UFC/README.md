@@ -23,7 +23,7 @@ under the [CC0 Public Domain licence](https://creativecommons.org/publicdomain/z
 
 ![UFC Total Fights and KO-TKO by Weight Class - Bar-chart](sample_plots/UFC_Total_Fights_and_KO-TKO_by_Weight_Class_Bar-chart.png)
 
-![UFC Total Fights and KO-TKO by Weight Class - Pie-chart](UFC_Total_Fights_and_KO-TKO_by_Weight_Class_Pie-chart.png)
+![UFC Total Fights and KO-TKO by Weight Class - Pie-chart](sample_plots/UFC_Total_Fights_and_KO-TKO_by_Weight_Class_Pie-chart.png)
 
 ---
 
