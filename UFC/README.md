@@ -54,5 +54,6 @@ python ufc_events_analysis.py
 ---
 
 ## License
+This project is licensed under the MIT License.
 Dataset originally published by maksbasher on Kaggle under the
 [CC0 Public Domain licence](https://creativecommons.org/publicdomain/zero/1.0/).
