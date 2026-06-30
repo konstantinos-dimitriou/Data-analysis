@@ -1,0 +1,9 @@
+Large data set:
+    Missing data in total rounds, referee, fighter age, reach and stance.
+    Does not contain fights which ended in draws.
+Medium data set:
+    Missing data in event, date, location, r+b fighters, r+b strikes/takedowns/submisions.
+    The last 85 lines consist of ,,,,,Fight was not properly finished,,,,,,,,,,,,, .
+    We'll remove those for our analyses.
+    The fighter colours is unreliable as all the winners are given the red corner which is incorect.
+    In the medium_dataset.csv we corrected the event title in "The Ultimate Fighter: Team Joanna vs. Team Cláudia Finale", the character "á" was messed up.
