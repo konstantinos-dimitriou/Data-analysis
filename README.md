@@ -6,8 +6,12 @@ A collection of personal data analysis projects using Python, pandas, and matplo
 ## Projects
 
 ### UFC Fight Analysis
-Analysis of UFC fight data from 1996–2024, including fight distribution by weight class
-and knockout rates across divisions. See the [UFC folder](UFC/) for details.
+Analysis of UFC fight data from 1996–2024, including:
+- Fight distribution by weight class.
+- Knockout rates across divisions.
+- Win distribution by corner colour.
+- Validity of ring rust hypothesis.
+See the [UFC folder](UFC/) for details.
 
 ---
 *More projects coming soon.*
