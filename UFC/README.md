@@ -3,7 +3,7 @@ Analysis of UFC fight data from 1996 to 2024. We explore the following:
 - Fight distribution and knockout rates across all weight classes.
 - Win distribution by corner colour.
 - Validity of ring rust (i.e. longer layoff times between fights results in lower win rates).
-(The ring rust analysis 'Purple Belt Analytics' on YouTube see https://www.youtube.com/watch?v=D3kaBoUZAuA)
+(The ring rust analysis was inspired by the same project presented on YouTube by the user 'Purple Belt Analytics' see https://www.youtube.com/watch?v=D3kaBoUZAuA)
 
 ---
 

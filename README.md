@@ -11,7 +11,7 @@ Analysis of UFC fight data from 1996–2024, including:
 - Knockout rates across divisions.
 - Win distribution by corner colour.
 - Validity of ring rust hypothesis.
-See the [UFC folder](UFC/) for details.123
+See the [UFC folder](UFC/) for details.
 
 ---
 *More projects coming soon.*
