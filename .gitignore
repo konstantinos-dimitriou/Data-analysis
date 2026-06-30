@@ -1,6 +1,10 @@
 # Generated plot outputs
 PLOTS/*.png
 
+# Test/debug file(s)
+test.py
+some_test_file.py
+
 # Python cache
 __pycache__/
 *.pyc
