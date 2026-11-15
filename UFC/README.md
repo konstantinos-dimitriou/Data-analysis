@@ -78,6 +78,7 @@ Plots are written to `outputs/figures/`, the processed tables to `data/processed
 ## Test
 ```bash
 pytest -v
+```
 ---
 
 ## License
