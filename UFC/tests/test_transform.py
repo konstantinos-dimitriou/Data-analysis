@@ -125,11 +125,12 @@ def test_merge_large_and_medium_data():
         "r_fighter": ["F1", "F3"],
         "b_fighter": ["F4", "F6"],
         "winner": ["Red", "Blue"],
+        "fight_order": [0, 0]
     })
 
     result = transform.merge_large_and_medium_data(large_df, medium_df)
 
-    assert set(result.columns) == {"event_name", "r_fighter", "b_fighter", "winner", "date"}
+    assert set(result.columns) == {"event_name", "r_fighter", "b_fighter", "winner", "date", "fight_order"}
     assert len(result) == 4, "2 decisive fights + 2 draws."
     assert (result["winner"] == "Draw").sum() == 2
     assert (result["winner"] == "Red").sum() == 1
@@ -143,6 +144,7 @@ def test_add_rest_days_columns():
         "b_fighter": ["Carol", "Alice", "Dave"],
         "winner":    ["Red",   "Blue",  "Red"],
         "date":      ["3/1/2024", "2/1/2024", "1/1/2024"],
+        "fight_order": [0, 0, 0]
     })
 
     result = transform.add_rest_days_columns(df)
@@ -160,7 +162,7 @@ def test_add_rest_days_columns():
     # Dave's only fight
     assert pd.isna(result.loc[2, "b_rest_days"])
 
-
+"""
 def test_exclude_same_night_repeat_fights():
     df = pd.DataFrame({
         "date": ["01/01/2020", "01/01/2020"],
@@ -176,6 +178,44 @@ def test_exclude_same_night_repeat_fights():
     assert np.isnan(result.loc[1, "r_rest_days"]), "Second fight on same night should be NaN."
     assert result.loc[0, "b_rest_days"] == 50
     assert result.loc[1, "b_rest_days"] == 60
+"""
+def test_exclude_same_night_repeat_fights():
+    # Main event first: row 0 is the final (fight_order 1), row 1 the opener (fight_order 0).
+    df = pd.DataFrame({
+        "date": ["01/01/2020", "01/01/2020"],
+        "r_fighter": ["A", "A"],
+        "b_fighter": ["B", "C"],
+        "r_rest_days": [0, 100],
+        "b_rest_days": [50, 60],
+        "fight_order": [1, 0],
+    })
+
+    result = transform.exclude_same_night_repeat_fights(df)
+
+    assert np.isnan(result.loc[0, "r_rest_days"]), "The final is a same-night repeat."
+    assert result.loc[1, "r_rest_days"] == 100, "The opener keeps the layoff."
+    assert result.loc[0, "b_rest_days"] == 50
+    assert result.loc[1, "b_rest_days"] == 60
+
+
+def test_same_night_layoff_lands_on_first_fight_across_corners():
+    # A fought on night 1, then twice on night 2: blue in the opener, red in the final.
+    # Rows are listed main event first, newest night first.
+    df = pd.DataFrame({
+        "event_name": ["Night 2", "Night 2", "Night 1"],
+        "r_fighter": ["A", "C", "A"],
+        "b_fighter": ["B", "A", "X"],
+        "winner": ["Red", "Blue", "Red"],
+        "date": ["02/01/2020", "02/01/2020", "01/01/2020"],
+        "fight_order": [1, 0, 0],
+    })
+
+    result = transform.add_rest_days_columns(df)
+    result = transform.exclude_same_night_repeat_fights(result)
+
+    assert result.loc[1, "b_rest_days"] == 31, "Layoff belongs to A's opener (blue corner)."
+    assert np.isnan(result.loc[0, "r_rest_days"]), "A's final is a same-night repeat."
+
 
 
 def test_categorize_rest_days():

@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 
 
+LAYOFF_PERIOD_BINS = [-0.1, 90, 180, 270, 360, 540, np.inf]
+LAYOFF_PERIOD_LABELS = ["0-90", "91-180", "181-270", "271-360", "361-540", "540+"]
+
+
 WEIGHT_DIVISIONS = {
         "male": [
             "Flyweight", "Bantamweight", "Featherweight", "Lightweight",
@@ -115,11 +119,10 @@ def merge_large_and_medium_data(large_df, medium_df):
     # Concatenate the two datasets.
     df = pd.concat([large_df, medium_df], ignore_index=True)
 
-    # Sort chronologically by date using a stable sort, so that fights sharing the
-    # same date (every fight within a single event) retain their original relative
-    # order from the source data — which reflects the true chronological order fights
-    # occurred within that event (important for early tournament-style events where
-    # a fighter could face multiple opponents on the same night).
+    # The source lists each event main event first, so the LAST row of an event is
+    # its first fight. fight_order = 0 is therefore the first fight of the night.
+    df["fight_order"] = df.groupby("event_name").cumcount(ascending=False)
+
     df["date"] = pd.to_datetime(df["date"], format="%m/%d/%Y")
     #df = df.sort_values("date", ascending=False).reset_index(drop=True)
     df = df.sort_values("date", ascending=False, kind="stable").reset_index(drop=True) # We keep the order of fights. This is important when exluding succesive tournament fights.
@@ -133,6 +136,7 @@ def add_rest_days_columns(df):
     df["date_parsed"] = pd.to_datetime(df["date"], format="%m/%d/%Y")
 
     # Long format: one row per (fight, corner_colour)
+    """
     red = df[["r_fighter", "date_parsed"]].rename(columns={"r_fighter": "fighter"})
     red["corner"] = "Red"
     red["row_index"] = df.index
@@ -145,6 +149,19 @@ def add_rest_days_columns(df):
 
     # Sort by fighter, then date ascending, so the previous fight sits directly above
     long_df = long_df.sort_values(["fighter", "date_parsed"])
+    """
+    red = df[["r_fighter", "date_parsed", "fight_order"]].rename(columns={"r_fighter": "fighter"})
+    red["corner"] = "Red"
+    red["row_index"] = df.index
+
+    blue = df[["b_fighter", "date_parsed", "fight_order"]].rename(columns={"b_fighter": "fighter"})
+    blue["corner"] = "Blue"
+    blue["row_index"] = df.index
+
+    long_df = pd.concat([red, blue], ignore_index=True)
+
+    # Chronological order per fighter: night first, then fight within the night
+    long_df = long_df.sort_values(["fighter", "date_parsed", "fight_order"])
 
     # Days since the fighter's previous fight; NaN for a fighter's first fight
     long_df["days_since_last_fight"] = long_df.groupby("fighter")["date_parsed"].diff().dt.days
@@ -170,14 +187,15 @@ def exclude_same_night_repeat_fights(df):
     """
     df = df.copy()
 
-    # Build long format to identify, per fighter, which rows are same-night repeats
+
+
     long_df = pd.concat([
-        df[["r_fighter", "date"]].rename(columns={"r_fighter": "fighter"}).assign(corner="Red", row_index=df.index),
-        df[["b_fighter", "date"]].rename(columns={"b_fighter": "fighter"}).assign(corner="Blue", row_index=df.index),
+        df[["r_fighter", "date", "fight_order"]].rename(columns={"r_fighter": "fighter"}).assign(corner="Red", row_index=df.index),
+        df[["b_fighter", "date", "fight_order"]].rename(columns={"b_fighter": "fighter"}).assign(corner="Blue", row_index=df.index),
     ])
 
-    # Rank each fighter's fights on a given date by their original row order
-    # (row order reflects chronological order within the event, per fight numbering)
+    # Rank each fighter's fights on a given night by fight_order (0 = first fight of the night)
+    long_df = long_df.sort_values(["fighter", "date", "fight_order"])
     long_df["same_night_rank"] = long_df.groupby(["fighter", "date"]).cumcount()
 
     # Anything with rank > 0 is a same-night repeat — not their first fight that night
@@ -190,10 +208,6 @@ def exclude_same_night_repeat_fights(df):
     df.loc[blue_repeat_rows, "b_rest_days"] = np.nan
 
     return df
-
-
-LAYOFF_PERIOD_BINS = [-0.1, 90, 180, 270, 360, 540, np.inf]
-LAYOFF_PERIOD_LABELS = ["0-90", "91-180", "181-270", "271-360", "361-540", "540+"]
 
 
 def categorize_rest_days(rest_days):
