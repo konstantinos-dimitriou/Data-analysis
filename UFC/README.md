@@ -36,11 +36,24 @@ under the [CC0 Public Domain licence](https://creativecommons.org/publicdomain/z
 ---
 
 ## Project Structure
-- `ufc_events_analysis.py` — main analysis and plotting code
-- `Notes_on_data_sets.txt` — Some notes on the exact intricacies of the data sets, and small adjustments done to them.
-- `TESTS/` — unit tests for data cleaning and processing functions
-- `DATA/` — raw dataset
-- `sample_plots/` — example output plots
+```
+UFC/
+├── src/
+│   ├── extract.py      — read and validate the raw CSV files
+│   ├── transform.py    — cleaning, weight class normalisation, merging, rest-day calculation
+│   ├── load.py         — write the tables used in the analysis to data/processed
+│   ├── analysis.py     — counts, win rates and tables (no plotting)
+│   ├── plotting.py     — figures (returned, not saved)
+│   └── pipeline.py     — paths, settings and run order
+├── tests/              — unit tests for transform, analysis and plotting helpers
+├── data/
+│   ├── raw/            — original Kaggle CSV files
+│   └── processed/      — tables produced by the pipeline
+├── outputs/figures/    — plots produced by the pipeline
+├── sample_plots/       — example output plots
+├── data_dictionary.txt — description of the data sets
+└── pyproject.toml      — pytest configuration
+```
 
 ---
 
@@ -49,17 +62,22 @@ under the [CC0 Public Domain licence](https://creativecommons.org/publicdomain/z
 - numpy
 - pandas
 - matplotlib
+- pytest (only needed to run the tests)
 
 ## Install dependencies
 ```bash
-pip install numpy pandas matplotlib
+pip install numpy pandas matplotlib pytest
 ```
 
 ## Run
 ```bash
-python ufc_events_analysis.py
+python -m src.pipeline
 ```
+Plots are written to `outputs/figures/`, the processed tables to `data/processed/`.
 
+## Test
+```bash
+pytest -v
 ---
 
 ## License
