@@ -1,16 +1,20 @@
-# Generated plot outputs
-PLOTS/*.png
-
-# Test/debug file(s)
-test.py
-some_test_file.py
-
-# Python cache
+# Python
 __pycache__/
 *.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
 *.pyo
 
-# Common editor and OS files
+# Environments
+.venv/
+venv/
+.env
+
+# Editor / OS
 .vscode/
 .idea/
 .DS_Store
+
+# Test/debug file(s)
+test.py
