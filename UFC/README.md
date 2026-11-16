@@ -14,10 +14,12 @@ under the [CC0 Public Domain licence](https://creativecommons.org/publicdomain/z
 ---
 
 ## Features
+Data related:
 - Fight distribution across all UFC weight classes
 - KO/TKO rate comparison across weight classes
 - Win rate comparison by corner colour
 - Analysis of layoff impact to win rate.
+Technical:
 - Pie charts and grouped bar charts with consistent colour coding
 - Automated data cleaning and weight class normalisation
 - Unit tests for core data processing functions
@@ -70,12 +72,14 @@ pip install numpy pandas matplotlib pytest
 ```
 
 ## Run
+From UFC folder run the command:
 ```bash
 python -m src.pipeline
 ```
 Plots are written to `outputs/figures/`, the processed tables to `data/processed/`.
 
 ## Test
+From UFC folder run the command:
 ```bash
 pytest -v
 ```
