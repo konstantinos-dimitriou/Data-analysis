@@ -41,20 +41,20 @@ Technical:
 ```
 UFC/
 ├── src/
-│   ├── extract.py      — read and validate the raw CSV files
-│   ├── transform.py    — cleaning, weight class normalisation, merging, rest-day calculation
-│   ├── load.py         — write the tables used in the analysis to data/processed
-│   ├── analysis.py     — counts, win rates and tables (no plotting)
-│   ├── plotting.py     — figures (returned, not saved)
-│   └── pipeline.py     — paths, settings and run order
-├── tests/              — unit tests for transform, analysis and plotting helpers
+│   ├── extract.py          — read and validate the raw CSV files
+│   ├── transform.py        — cleaning, weight class normalisation, merging, rest-day calculation
+│   ├── load.py             — write the tables used in the analysis to data/processed
+│   ├── analysis.py         — counts, win rates and tables (no plotting)
+│   ├── plotting.py         — figures (returned, not saved)
+│   └── main_pipeline.py    — paths, settings and run order
+├── tests/                  — unit tests for transform, analysis and plotting helpers
 ├── data/
-│   ├── raw/            — original Kaggle CSV files
-│   └── processed/      — tables produced by the pipeline
-├── outputs/figures/    — plots produced by the pipeline
-├── sample_plots/       — example output plots
-├── data_dictionary.txt — description of the data sets
-└── pyproject.toml      — pytest configuration
+│   ├── raw/                — original Kaggle CSV files
+│   └── processed/          — tables produced by the pipeline
+├── outputs/figures/        — plots produced by the pipeline
+├── sample_plots/           — example output plots
+├── data_dictionary.txt     — description of the data sets
+└── pyproject.toml          — pytest configuration
 ```
 
 ---
@@ -74,7 +74,7 @@ pip install numpy pandas matplotlib pytest
 ## Run
 From UFC folder run the command:
 ```bash
-python -m src.pipeline
+python -m src.main_pipeline
 ```
 Plots are written to `outputs/figures/`, the processed tables to `data/processed/`.
 
